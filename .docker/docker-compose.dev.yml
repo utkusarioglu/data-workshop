@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  conda-econ-repo-template:
+    image: utkusarioglu/conda-econ-devcontainer:1.0.10
+    environment:
+      PYTHONPATH: /utkusarioglu-com/templates/conda-econ-repo-template
+    volumes:
+      - type: bind
+        source: ..
+        target: /utkusarioglu-com/templates/conda-econ-repo-template

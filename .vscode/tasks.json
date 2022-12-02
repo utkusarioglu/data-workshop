@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Test Monitor",
+      "detail": "Run tests",
+      "type": "shell",
+      "command": "scripts/test-monitor.sh",
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "beaker"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false,
+        "close": false
+      }
+    }
+  ]
+}

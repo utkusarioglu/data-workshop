@@ -1,0 +1,20 @@
+{
+  "name": "conda-econ-repo-template.templates.utkusarioglu.com",
+  "dockerComposeFile": [
+    "../.docker/docker-compose.dev.yml",
+    "docker-compose.yml"
+  ],
+  "service": "conda-econ-repo-template",
+  "workspaceFolder": "/utkusarioglu-com/templates/conda-econ-repo-template",
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.background": "#FF0000",
+      "activityBar.foreground": "#000000"
+    }
+  },
+  "extensions": [
+    "ms-python.python",
+    "ms-toolsai.jupyter"
+  ],
+  "postCreateCommand": "scripts/post-create-command.sh"
+}
