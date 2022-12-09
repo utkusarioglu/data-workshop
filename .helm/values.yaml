@@ -1,0 +1,30 @@
+postgresql:
+  global:
+    postgresql:
+      auth:
+        username: postgres
+        password: postgres
+        postgresPassword: postgres
+        database: postgres
+
+  primary:
+    service:
+      type: LoadBalancer
+    nodeSelector:
+      kubernetes.io/hostname: worker-2
+    extraVolumes:
+      - name: migrations
+        hostPath:
+          path: /migrations
+          type: DirectoryOrCreate
+      - name: user-data
+        hostPath:
+          path: /user-data
+          type: DirectoryOrCreate
+    extraVolumeMounts:
+      - name: migrations
+        mountPath: /migrations
+        readOnly: true
+      - name: user-data
+        mountPath: /user-data
+        readOnly: true

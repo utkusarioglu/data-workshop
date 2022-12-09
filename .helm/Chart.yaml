@@ -1,0 +1,12 @@
+apiVersion: v2
+name: data-workshop-postgres
+description: Deploys postgres for utkusarioglu/data-workshop
+
+type: application
+version: 0.1.0
+appVersion: "1.16.0"
+
+dependencies:
+  - name: postgresql
+    repository: https://charts.bitnami.com/bitnami
+    version: 12.1.3

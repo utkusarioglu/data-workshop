@@ -1,0 +1,8 @@
+name: econ
+channels:
+  - defaults
+dependencies:
+  - anaconda::psycopg2
+
+  - conda-forge::sqlalchemy
+  - conda-forge::cmasher

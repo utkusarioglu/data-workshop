@@ -1,11 +1,16 @@
 version: "3.9"
 
 services:
-  conda-econ-repo-template:
+  data-workshop:
     image: utkusarioglu/conda-econ-devcontainer:1.0.10
+    extra_hosts:
+      local.data-workshop.workshops.utkusarioglu.com: host-gateway
     environment:
-      PYTHONPATH: /utkusarioglu-com/templates/conda-econ-repo-template
+      PYTHONPATH: /utkusarioglu-com/workshops/data-workshop
+      # PERSISTENT_VOLUMES_ROOT: ${HOME}/dev/volumes/data-workshop
+      # TARGET_VOLUMES_ROOT: /var/lib/rancher/k3s/storage
+      # CLUSTER_REGION: us-west-1
     volumes:
       - type: bind
         source: ..
-        target: /utkusarioglu-com/templates/conda-econ-repo-template
+        target: /utkusarioglu-com/workshops/data-workshop
