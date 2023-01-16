@@ -19,10 +19,10 @@ ports:
     nodeFilters:
       - loadbalancer
 volumes:
-  - volume: ${PERSISTENT_VOLUMES_ROOT}/ethereum-pv:/${TARGET_VOLUMES_ROOT}/ethereum-pv
-    nodeFilters:
-      - agent:3
-      - agent:4
+  # - volume: ${PERSISTENT_VOLUMES_ROOT}/ethereum-pv:/${TARGET_VOLUMES_ROOT}/ethereum-pv
+  #   nodeFilters:
+  #     - agent:3
+  #     - agent:4
   - volume: ${PERSISTENT_VOLUMES_ROOT}/server-0:${TARGET_VOLUMES_ROOT}
     nodeFilters:
       - server:0
