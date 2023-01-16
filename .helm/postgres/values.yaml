@@ -22,6 +22,7 @@ postgresql:
         args:
           - |
             mkdir -p /tablespaces/happiness && \
+            mkdir -p /tablespaces/inflation && \
             chown -R 1001:0 /tablespaces && \
             ls -al /tablespaces
         volumeMounts:
@@ -49,9 +50,8 @@ postgresql:
         hostPath:
           path: /var/lib/rancher/k3s/storage/tablespaces
           type: DirectoryOrCreate
-    # initdb:
-    #   scripts:
-    #     create-directories.sh: |
-    #       #!/bin/sh
-    #       mkdir -p /tablespaces/happiness
-    #       chown -R 1001:0 /tablespaces
+    initdb:
+      scripts:
+        create-directories.sh: |
+          PGPASSWORD=postgres \
+            psql -U postgres -d initial -c "\i /migrations/init.sql"

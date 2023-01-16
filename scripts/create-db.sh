@@ -2,13 +2,18 @@
 
 . scripts/exports.sh
 
-TARGET_NS=postgres
 INSTALLATION_NAME=data-workshop
 
 # This will of course require privilege escalation
 sudo rm -rf ~/dev/volumes/data-workshop
 
 k3d cluster create -c assets/k3d.config.yml
-kubectl create ns "$TARGET_NS"
-helm -n "$TARGET_NS" install "$INSTALLATION_NAME" .helm
-kubectl -n "$TARGET_NS" get po --watch
+for ns in "postgres" "grafana"; do
+  kubectl create ns $ns; 
+done
+helm -n "postgres" install "data-workshop" .helm/postgres
+
+helm install grafana-operator .helm/grafana-operator
+helm install grafana .helm/grafana
+
+kubectl get po --watch -A
