@@ -9,20 +9,16 @@ kubeAPI:
   hostIP: "127.0.0.1"
   hostPort: "6443"
 ports:
-  # - port: 80:80
-  #   nodeFilters:
-  #     - loadbalancer
-  # - port: 443:443
-  #   nodeFilters:
-  #     - loadbalancer
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer
   - port: 5432:5432
     nodeFilters:
       - loadbalancer
 volumes:
-  # - volume: ${PERSISTENT_VOLUMES_ROOT}/ethereum-pv:/${TARGET_VOLUMES_ROOT}/ethereum-pv
-  #   nodeFilters:
-  #     - agent:3
-  #     - agent:4
   - volume: ${PERSISTENT_VOLUMES_ROOT}/server-0:${TARGET_VOLUMES_ROOT}
     nodeFilters:
       - server:0
@@ -59,9 +55,6 @@ options:
       - arg: --tls-san=local.targets.infra.data-workshop.workshops.utkusarioglu.com
         nodeFilters:
           - server:*
-      - arg: --disable=traefik
-        nodeFilters:
-          - server:0
       - arg: --node-taint=node-role.kubernetes.io/control-plane=true:NoExecute
         nodeFilters:
           - server:*
