@@ -2,16 +2,40 @@ postgresql:
   global:
     postgresql:
       auth:
-        username: postgres
-        password: postgres
+        # username: utku
+        # password: utku
+        enablePostgresUser: true
         postgresPassword: postgres
-        database: postgres
+        database: initial
 
   primary:
     service:
       type: LoadBalancer
     nodeSelector:
       kubernetes.io/hostname: worker-2
+    initContainers:
+      - name: create-tablespace-folders
+        image: busybox:latest
+        command: 
+          - sh
+          - -c
+        args:
+          - |
+            mkdir -p /tablespaces/happiness && \
+            chown -R 1001:0 /tablespaces && \
+            ls -al /tablespaces
+        volumeMounts:
+          - name: tablespaces
+            mountPath: /tablespaces
+    extraVolumeMounts:
+      - name: migrations
+        mountPath: /migrations
+        readOnly: true
+      - name: user-data
+        mountPath: /user-data
+        readOnly: true
+      - name: tablespaces
+        mountPath: /tablespaces
     extraVolumes:
       - name: migrations
         hostPath:
@@ -21,10 +45,13 @@ postgresql:
         hostPath:
           path: /user-data
           type: DirectoryOrCreate
-    extraVolumeMounts:
-      - name: migrations
-        mountPath: /migrations
-        readOnly: true
-      - name: user-data
-        mountPath: /user-data
-        readOnly: true
+      - name: tablespaces
+        hostPath:
+          path: /var/lib/rancher/k3s/storage/tablespaces
+          type: DirectoryOrCreate
+    # initdb:
+    #   scripts:
+    #     create-directories.sh: |
+    #       #!/bin/sh
+    #       mkdir -p /tablespaces/happiness
+    #       chown -R 1001:0 /tablespaces

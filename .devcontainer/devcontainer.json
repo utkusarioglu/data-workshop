@@ -16,7 +16,8 @@
       },
       "extensions": [
         "ms-python.python",
-        "ms-toolsai.jupyter"
+        "ms-toolsai.jupyter",
+        "ms-python.black-formatter"
       ]
     }
   },
