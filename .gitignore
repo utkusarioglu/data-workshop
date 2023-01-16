@@ -9,3 +9,4 @@ __pycache__
 /artifacts
 
 /.helm/charts
+secrets
