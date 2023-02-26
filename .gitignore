@@ -10,3 +10,4 @@ __pycache__
 
 /.helm/charts
 secrets
+/dumps

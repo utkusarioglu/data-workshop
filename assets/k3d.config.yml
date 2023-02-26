@@ -43,6 +43,9 @@ volumes:
   - volume: ${HOME}/dev/workshops/data-workshop/data:/user-data
     nodeFilters:
       - agent:2
+  - volume: ${HOME}/dev/workshops/data-workshop/dumps:/dumps
+    nodeFilters:
+      - agent:2
 options:
   k3d:
     wait: true

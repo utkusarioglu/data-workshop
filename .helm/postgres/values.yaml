@@ -37,7 +37,13 @@ postgresql:
         readOnly: true
       - name: tablespaces
         mountPath: /tablespaces
+      - name: dumps
+        mountPath: /dumps
     extraVolumes:
+      - name: dumps
+        hostPath:
+          path: /dumps
+          type: DirectoryOrCreate
       - name: migrations
         hostPath:
           path: /migrations
@@ -52,6 +58,9 @@ postgresql:
           type: DirectoryOrCreate
     initdb:
       scripts:
-        create-directories.sh: |
+        migrate-raw-data.sh: |
           PGPASSWORD=postgres \
             psql -U postgres -d initial -c "\i /migrations/init.sql"
+        # migrate-from-dumps.sh: |
+        #   cat /dumps/all.gz | gunzip | PGPASSWORD=postgres psql -U postgres
+          
