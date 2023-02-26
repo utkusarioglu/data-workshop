@@ -1,14 +1,9 @@
 {
-   "python.formatting.provider": "none",
-   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter",
-    "editor.formatOnSave": true
-  },
   "jupyter.kernels.filter": [
     {
       "path": "/opt/conda/bin/python",
       "type": "pythonEnvironment"
-    },
+    }
   ],
   "runOnSave.commands": [
     {
@@ -22,5 +17,9 @@
       "isAsync": true,
       "command": "gh secret set -f .env"
     }
-  ]
+  ],
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true,
+  "python.linting.flake8Path": "/home/econ/.conda/envs/econ/lib/python3.10/site-packages/flake8",
+  "python.analysis.typeCheckingMode": "basic"
 }

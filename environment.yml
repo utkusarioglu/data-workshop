@@ -3,5 +3,7 @@ channels:
   - defaults
 dependencies:
   - anaconda::psycopg2
-  - conda-forge::sqlalchemy
+  - conda-forge::sqlalchemy=1.4.46
   - conda-forge::cmasher
+  - anaconda::flake8
+  - conda-forge::black
