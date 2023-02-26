@@ -18,3 +18,4 @@ GRANT SELECT ON TABLE inflation.decade_stats TO g_inflation_readonly;
 GRANT SELECT ON TABLE inflation.country_average_inflation TO g_inflation_readonly;
 GRANT SELECT ON TABLE inflation.year_average_inflation TO g_inflation_readonly;
 GRANT SELECT ON TABLE inflation.with_decades TO g_inflation_readonly;
+GRANT SELECT ON TABLE inflation.indicator_list TO g_inflation_readonly;

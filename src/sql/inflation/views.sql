@@ -50,6 +50,7 @@ CREATE OR REPLACE VIEW inflation.decades_regression AS
   ORDER BY
     country_name,
     decade
+;
   
 DROP VIEW IF EXISTS inflation.country_average_inflation;
 CREATE OR REPLACE VIEW inflation.country_average_inflation AS

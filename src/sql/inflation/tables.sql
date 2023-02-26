@@ -1,3 +1,5 @@
+-- Creates the temp inflation file that corresponds in structure to the 
+-- Source csv file
 CREATE OR REPLACE PROCEDURE create_temp_inflation_table()
   LANGUAGE plpgsql
   AS
@@ -78,18 +80,40 @@ $$;
 
 CALL create_temp_inflation_table();
 
+-- Creates processed tables for inflation
 CREATE OR REPLACE PROCEDURE inflation.create_real_inflation_table()
   LANGUAGE plpgsql
   AS $$
 BEGIN
+  DROP TABLE IF EXISTS inflation.indicator_list CASCADE;
+  CREATE TABLE inflation.indicator_list (
+    "id" INT GENERATED ALWAYS AS IDENTITY,
+    "indicator_name" VARCHAR(50) NOT NULL,
+    "indicator_code" VARCHAR(20) NOT NULL,
+    CONSTRAINT indicator_name_length CHECK (LENGTH("indicator_name") > 20),
+    CONSTRAINT indicator_code_length CHECK (LENGTH("indicator_code") > 10),
+    PRIMARY KEY ("id")
+  );
+
+  CREATE UNIQUE INDEX IF NOT EXISTS indicator_code 
+    ON ONLY inflation.indicator_list (
+      "indicator_code"
+    )
+    NULLS NOT DISTINCT
+    TABLESPACE ts_inflation;
+
   DROP TABLE IF EXISTS inflation.country_list CASCADE;
   CREATE TABLE inflation.country_list (
-    id INT GENERATED ALWAYS AS IDENTITY,
-    country_name TEXT UNIQUE NOT NULL,
-    country_code TEXT UNIQUE NOT NULL,
-    indicator_name TEXT NOT NULL,
-    indicator_code TEXT NOT NULL,
-    PRIMARY KEY (id)
+    "id" INT GENERATED ALWAYS AS IDENTITY,
+    "country_name" TEXT UNIQUE NOT NULL,
+    "country_code" TEXT UNIQUE NOT NULL,
+    "indicator_id" INT,
+    PRIMARY KEY ("id"),
+    CONSTRAINT indicator_foreign_key
+      FOREIGN KEY("indicator_id")
+      REFERENCES inflation.indicator_list(id)
+      ON DELETE RESTRICT
+      ON UPDATE CASCADE
   );
 
   DROP TABLE IF EXISTS inflation.inflation_data CASCADE;
@@ -131,27 +155,55 @@ DECLARE
   err_context TEXT;
   rec inflation.inflation_temp%ROWTYPE;
   country_id INT;
+  current_indicator_id INT;
+  years_list TEXT[]; -- int as text
+  target_year TEXT; -- int as text
 BEGIN
+  INSERT INTO inflation.indicator_list (
+    "indicator_name", 
+    "indicator_code"
+  )
+    SELECT DISTINCT 
+      "indicator_name",
+      "indicator_code"
+    FROM inflation.inflation_temp;
+    
+  SELECT ARRAY(
+    SELECT 
+      replace(column_name, 'year_', '') AS "year"
+    FROM information_schema.columns 
+    WHERE 
+      table_name = 'inflation_temp' 
+      AND 
+      column_name LIKE 'year_%'
+  )
+  INTO years_list;
+
   FOR rec IN SELECT * FROM inflation.inflation_temp LOOP
+    SELECT 
+      l."id" 
+    FROM inflation.indicator_list l
+    WHERE
+      l."indicator_code" = rec.indicator_code
+    INTO current_indicator_id;
+    
     INSERT INTO inflation.country_list (
-      country_name,
-      country_code,
-      indicator_name,
-      indicator_code
+      "country_name",
+      "country_code",
+      "indicator_id"
     ) VALUES (
       rec.country_name,
       rec.country_code,
-      rec.indicator_name,
-      rec.indicator_code
+      current_indicator_id
     ) 
-    RETURNING id
+    RETURNING "id"
     INTO country_id;
 
-    FOR target_year IN 1960..2021 LOOP
+    FOREACH target_year IN ARRAY years_list LOOP
       prepared_query := REPLACE(
         raw_query, 
         '%YEAR_NAME%', 
-        CAST(target_year AS TEXT)
+        target_year
       );
       BEGIN
         EXECUTE prepared_query USING country_id, rec;
